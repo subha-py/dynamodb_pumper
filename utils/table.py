@@ -8,9 +8,15 @@ def create_table(table_name='auto-table-1'):
     try:
         response = client.create_table(TableName=table_name, KeySchema=KeySchema, AttributeDefinitions=AttributeDefinitions,
             ProvisionedThroughput=ProvisionedThroughput)
+        response.wait_until_exists()
     except Exception as e:
         if 'Table already exists' in str(e):
             print('Table already exist')
             pass
+
+def get_table(table_name='auto-table-1'):
+    client = connect()
+    return client.Table(table_name)
+
 if __name__ == '__main__':
-    create_table()
+    get_table()
