@@ -1,13 +1,11 @@
 import random
 import sys
-sys.path.append('/root/mongodb_pumper/utils')
-sys.path.append('/root/mongodb_pumper')
+sys.path.append('/root/dynamodb_pumper/utils')
+sys.path.append('/root/dynamodb_pumper')
 from string import ascii_letters
-import datetime
+
 import concurrent.futures
-from utils.connect import connect
 from utils.table import get_table
-from utils.memory import get_number_of_rows_from_size
 
 def create_random_doc():
     toggle = random.choice([True, False])
