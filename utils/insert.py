@@ -41,12 +41,29 @@ def create_random_docs(batch_size):
         docs.append(create_random_doc())
     return docs
 
-def process_batch(table_name='auto-table-1'):
+def process_batch(batch_number,total_batches, table_name, batch_size=1000):
+    print(f'{batch_number}//{total_batches}: starting')
     table = get_table(table_name)
     with table.batch_writer() as batch:
-        for i in range(50):
+        for i in range(batch_size):
             batch.put_item(Item=create_random_doc())
+    print(f'{batch_number}//{total_batches}: batch executed')
+def pump_data(threads=10, number_of_batches=20, table_name='auto-table-1'):
+    future_to_batch = {}
+    with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+        for batch_number in range(1,number_of_batches+1):
+            arg = (batch_number,number_of_batches, table_name)
+            future_to_batch[executor.submit(process_batch, *arg)] = batch_number
+    result = []
+    for future in concurrent.futures.as_completed(future_to_batch):
+        batch_number = future_to_batch[future]
+        try:
+            res = future.result()
+            if not res:
+                result.append(batch_number)
+        except Exception as exc:
+            print("%r generated an exception: %s" % (batch_number, exc))
+    return result
 
 if __name__ == '__main__':
-    process_batch()
-
+    pump_data()

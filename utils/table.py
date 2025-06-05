@@ -3,11 +3,9 @@ def create_table(table_name='auto-table-1'):
     client = connect()
     KeySchema = [{'AttributeName': 'username', 'KeyType': 'HASH'}, {'AttributeName': 'last_name', 'KeyType': 'RANGE'}]
     AttributeDefinitions = [{'AttributeName': 'username', 'AttributeType': 'S'}, {'AttributeName': 'last_name', 'AttributeType': 'S'}]
-
-    ProvisionedThroughput = {'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5}
     try:
         response = client.create_table(TableName=table_name, KeySchema=KeySchema, AttributeDefinitions=AttributeDefinitions,
-            ProvisionedThroughput=ProvisionedThroughput)
+            BillingMode='PAY_PER_REQUEST')
         response.wait_until_exists()
     except Exception as e:
         if 'Table already exists' in str(e):
@@ -19,4 +17,4 @@ def get_table(table_name='auto-table-1'):
     return client.Table(table_name)
 
 if __name__ == '__main__':
-    get_table()
+    create_table()
