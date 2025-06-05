@@ -5,5 +5,12 @@ def create_table(table_name='auto-table-1'):
     AttributeDefinitions = [{'AttributeName': 'username', 'AttributeType': 'S'}, {'AttributeName': 'last_name', 'AttributeType': 'S'}]
 
     ProvisionedThroughput = {'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5}
-    response = client.create_table(TableName=table_name, KeySchema=KeySchema, AttributeDefinitions=AttributeDefinitions,
-        ProvisionedThroughput=ProvisionedThroughput)
+    try:
+        response = client.create_table(TableName=table_name, KeySchema=KeySchema, AttributeDefinitions=AttributeDefinitions,
+            ProvisionedThroughput=ProvisionedThroughput)
+    except Exception as e:
+        if 'Table already exists' in str(e):
+            print('Table already exist')
+            pass
+if __name__ == '__main__':
+    create_table()
