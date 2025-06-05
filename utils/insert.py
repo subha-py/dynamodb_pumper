@@ -46,8 +46,9 @@ def process_batch(batch_number,total_batches, table_name, batch_size=1000):
         for i in range(batch_size):
             batch.put_item(Item=create_random_doc())
     print(f'{batch_number}//{total_batches}: batch executed')
-def pump_data(threads=64, number_of_batches=10^5, table_name='auto-table-1'):
+def pump_data(threads=64, table_name='auto-table-1'):
     future_to_batch = {}
+    number_of_batches = 1000000
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
         for batch_number in range(1,number_of_batches+1):
             arg = (batch_number,number_of_batches, table_name)
