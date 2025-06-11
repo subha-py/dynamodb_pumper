@@ -16,5 +16,16 @@ def get_table(table_name='auto-table-1'):
     client = connect()
     return client.Table(table_name)
 
+def get_table_size(table_name='auto-table-1'):
+    dynamodb = connect()
+    table = dynamodb.Table(table_name)
+    response = table.meta.client.describe_table(TableName=table_name)
+
+    # Get the table size in bytes
+    table_size_bytes = int(response['Table']['TableSizeBytes'])//1024//1024//1024
+    print(f"Table size: {table_size_bytes} GB")
+    return table_size_bytes
+
 if __name__ == '__main__':
-    create_table()
+    table = get_table_size()
+    print(table)

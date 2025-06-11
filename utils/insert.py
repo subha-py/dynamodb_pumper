@@ -65,4 +65,4 @@ def pump_data(threads=64, table_name='auto-table-1'):
     return result
 
 if __name__ == '__main__':
-    pump_data()
+    process_batch(1, 1, table_name='auto-table-1', batch_size=2)
